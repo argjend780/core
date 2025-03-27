@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
+
 
 @Service
 public class StudentApplicationService implements StudentService{
@@ -39,7 +41,10 @@ public class StudentApplicationService implements StudentService{
         StudentEntity studentEntity = studentRepository.findById(id).orElseThrow(
             () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student "+id +"not found")
         );
-       studentRepository.delete(studentEntity);
+        studentEntity.setDeletedAt(LocalDateTime.now()); // Set the deletion timestamp
+        studentEntity.setDeletedBy(1L); // Set the ID of the user who deleted the record (for example, admin)
+       
+        studentRepository.delete(studentEntity);
     }
     
 }
