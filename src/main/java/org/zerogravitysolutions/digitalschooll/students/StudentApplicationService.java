@@ -1,7 +1,6 @@
 package org.zerogravitysolutions.digitalschooll.students;
 
 import java.util.List;
-import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -35,5 +34,12 @@ public class StudentApplicationService implements StudentService{
         return studentRepository.findAll();
     } 
 
+    @Override
+    public void deleteById(Long id) {
+        StudentEntity studentEntity = studentRepository.findById(id).orElseThrow(
+            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student "+id +"not found")
+        );
+       studentRepository.delete(studentEntity);
+    }
     
 }
