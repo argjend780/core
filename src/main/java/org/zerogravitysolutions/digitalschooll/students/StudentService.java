@@ -8,6 +8,7 @@ public interface StudentService {
      
     StudentEntity findById(Long id);
     List<StudentEntity> findAll();
+    void deleteById(Long id);
 
 
 }
