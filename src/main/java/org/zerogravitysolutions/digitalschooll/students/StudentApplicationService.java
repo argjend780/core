@@ -6,6 +6,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 
 
 @Service
@@ -28,12 +30,12 @@ public class StudentApplicationService implements StudentService{
         return studentEntity;*/
         return studentRepository.findById(id).orElseThrow(
             () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student "+id +"not found")
-        );
+        ); 
     }
 
     @Override
-    public List<StudentEntity> findAll() {
-        return studentRepository.findAll();
+    public Page<StudentEntity> findAll(Pageable pageable) {
+        return studentRepository.findAll(pageable);
     } 
 
     @Override
@@ -65,4 +67,16 @@ public class StudentApplicationService implements StudentService{
         return studentRepository.save(studentEntityRequest);
     }*/
     
+    @Override
+    public StudentEntity create(StudentEntity studentEntity) {
+        studentEntity.setCreatedAt(LocalDateTime.now()); // Set the creation timestamp
+        studentEntity.setCreatedBy(1L); // Set the ID of the user who created the record (for example, admin)
+        return studentRepository.save(studentEntity);
+    }
+
+    @Override
+    public List<StudentEntity> search(String keyword) {
+        
+        return studentRepository.findByFirstNameContainingIgnoreCaseOrEmailContainingIgnoreCase(keyword, keyword);
+    }
 }
