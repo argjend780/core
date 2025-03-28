@@ -46,5 +46,23 @@ public class StudentApplicationService implements StudentService{
        
         studentRepository.delete(studentEntity);
     }
+    @Override
+    public StudentEntity update(StudentEntity studentEntityRequest) {
+        studentRepository.findById(studentEntityRequest.getId()).orElseThrow(
+            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student "+ studentEntityRequest.getId() +"not found")
+        );
+        studentEntityRequest.setUpdatedAt(LocalDateTime.now()); // Set the update timestamp
+        studentEntityRequest.setUpdatedBy(1L); // Set the ID of the user who updated the record (for example, admin)
+        return studentRepository.save(studentEntityRequest);
+    }
+    /*@Override
+    public StudentEntity uptdate(StudentEntity studentEntityRequest) {
+        studentRepository.findById(studentEntityRequest.getId()).orElseThrow(
+            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student "+ studentEntityRequest.getId() +"not found")
+        );
+        studentEntityRequest.setUpdatedAt(LocalDateTime.now()); // Set the update timestamp
+        studentEntityRequest.setUpdatedBy(1L); // Set the ID of the user who updated the record (for example, admin)
+        return studentRepository.save(studentEntityRequest);
+    }*/
     
 }
